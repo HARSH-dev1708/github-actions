@@ -38,3 +38,7 @@ jobs:
             "status": "success",
             "environment": "GitHub Actions"
             }' > reports.json
+        - name: Read value using jq
+          run: |
+            jq '.status' reports.json
+            jq '.project' report.json
