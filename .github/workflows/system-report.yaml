@@ -42,3 +42,11 @@ jobs:
           run: |
             jq '.status' reports.json
             jq '.project' reports.json
+
+        - name: Print tool versions
+          run: |
+            python3 --version
+            git --version
+            jq --version
+        - name: Report complete
+          run: echo "Report complete"
