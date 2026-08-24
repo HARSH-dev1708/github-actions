@@ -41,4 +41,4 @@ jobs:
         - name: Read value using jq
           run: |
             jq '.status' reports.json
-            jq '.project' report.json
+            jq '.project' reports.json
