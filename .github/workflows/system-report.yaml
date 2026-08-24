@@ -12,10 +12,16 @@ jobs:
           run: |
             echo "Operating System: $(uname -s)"
             echo "Kernel Version: $(uname -r)"
-            # df -h / → shows disk usage/free space for the root filesystem in a human-readable format.
+            # df -h / -> shows disk usage/free space for the root filesystem in a human-readable format.
             echo "Disk Usage: $(df -h)"
             echo "Date: $(date)"
-
+        - name: Install tree
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y tree
+    
+        - name: Display runner home directory
+          run: tree -L 2 "$HOME"
 
   tool-check:
     runs-on: ubuntu-latest
