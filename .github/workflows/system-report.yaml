@@ -31,3 +31,10 @@ jobs:
           run: |
             sudo apt-get update
             sudo apt-get install -y jq
+        - name: Create reports.json
+          run: |
+            echo '{
+            "project": "CI-CD Exercise",
+            "status": "success",
+            "environment": "GitHub Actions"
+            }' > reports.json
