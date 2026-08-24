@@ -8,10 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - name: Print OS and Kernal Information
+        - name: Print system information
           run: |
             echo "Operating System: $(uname -s)"
             echo "Kernel Version: $(uname -r)"
+            # df -h / → shows disk usage/free space for the root filesystem in a human-readable format.
+            echo "Disk Usage: $(df -h)"
+            echo "Date: $(date)"
 
 
   tool-check:
@@ -19,4 +22,5 @@ jobs:
 
     steps:
         - name: Placeholder for Tool Check
-          run: echo "This step is a placeholder for checking installed tools and versions."
+          run: |
+            echo "This step is a placeholder for checking installed tools and their versions."
