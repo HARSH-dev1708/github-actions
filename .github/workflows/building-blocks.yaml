@@ -1,9 +1,12 @@
 name: Building Blocks Demo
 
+# on:
+#   push:
+#     branches: [ "main" ]
+#   workflow_dispatch: # Allows manual trigger from GitHub UI
+
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
     echo-hello:
