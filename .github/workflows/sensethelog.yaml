@@ -1,6 +1,9 @@
 name: CI Pipeline
 
-on: [push, pull_request]
+# on: [push, pull_request]
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub UI 
 
 # Declaring permissions replaces ALL defaults — unlisted scopes become "none"
 permissions:
