@@ -1,0 +1,19 @@
+name: Nightly Housekeeper
+
+on:
+    schedule:
+        -  cron: '0 2 * * *' # Runs at 2:00 AM UTC every day
+    workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+    cleanup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Prints date and time
+              run: date
+
+            - name: Print status
+              run: echo "Running nightly cleanup"
+
+            - name: Report complete
+              run: echo "Nightly cleanup complete"
