@@ -16,7 +16,8 @@ jobs:
       - name: Print PR number
         env:
           PR_NUM: ${{ github.event.pull_request.number }}
-        run: echo "PR Number #${PR_NUM}"
+        run: |
+         echo "PR Number #${PR_NUM}"
 
       - name: Report complete
         run: echo "Gatekeeper checks complete"
