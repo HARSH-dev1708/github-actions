@@ -14,7 +14,10 @@ jobs:
         run: echo "Target branch ${{ github.base_ref }}"
 
       - name: Print PR number
-        run: echo "PR Number #${{ github.event.pull_request.number }}"
+        env:
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+         echo "PR Number #${PR_NUM}"
 
       - name: Report complete
         run: echo "Gatekeeper checks complete"
