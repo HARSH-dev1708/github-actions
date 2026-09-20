@@ -1,0 +1,81 @@
+name: Release Train
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  SERVICE_NAME: 'react-frontend-service'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: react-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run test suite
+        run: CI=true npm run test
+      - name: Print Environment
+        run: |
+          node --version
+          npm --version
+          which node
+
+  package:
+    needs: verify
+    runs-on: ubuntu-latest
+    outputs:
+      release_ref: ${{ steps.generate-ref.outputs.REF }}
+    defaults:
+      run:
+        working-directory: react-app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Release Reference
+        id: generate-ref
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          RELEASE_REF="${{ env.SERVICE_NAME }}-${{ github.run_number }}-${SHORT_SHA}"
+          echo "RELEASE_REF=$RELEASE_REF" >> $GITHUB_ENV
+          echo "REF=$RELEASE_REF" >> $GITHUB_OUTPUT
+      - name: Build Text Artifact
+        run: |
+          mkdir release
+          echo -e "Target: ${{ vars.DEPLOYMENT_TARGET }}\nRef: ${{ github.ref }}\nEvent: ${{ github.event_name }}\nActor: ${{ github.actor }}\nTime: $(date -u)" > release/${{ env.RELEASE_REF }}.txt
+          cp package.json release/
+      - name: JSON Manifest & Check
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq tree
+          echo '{"deployment_target": "${{ vars.DEPLOYMENT_TARGET }}", "event": "${{ github.event_name }}"}' > release/manifest.json
+          jq '.deployment_target' release/manifest.json
+          tree -L 2 release
+
+  announce:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Announce Details
+        run: |
+          echo "Reference: ${{ needs.package.outputs.release_ref }}"
+          echo "Target: ${{ vars.DEPLOYMENT_TARGET }}"
+          echo "Service: ${{ env.SERVICE_NAME }}"
+      - name: Announce Routing
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Announcing candidate"
+          else
+            echo "Announcing release"
+          fi
+          echo "Release train complete"
